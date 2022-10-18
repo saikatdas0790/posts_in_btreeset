@@ -13,7 +13,9 @@ impl Ord for PostScoreIndexItem {
             Ordering::Equal => match other.post_id.cmp(&self.post_id) {
                 // * It's the same post
                 Ordering::Equal => Ordering::Equal,
+                // * It's a different post
                 _ => match other.score.cmp(&self.score) {
+                    // * Order by score
                     Ordering::Greater => Ordering::Greater,
                     Ordering::Less => Ordering::Less,
                     Ordering::Equal => match other.post_id.cmp(&self.post_id) {
@@ -24,8 +26,12 @@ impl Ord for PostScoreIndexItem {
                 },
             },
             _ => match other.score.cmp(&self.score) {
+                // * Order by score
                 Ordering::Greater => Ordering::Greater,
                 Ordering::Less => Ordering::Less,
+
+                // * Scores match but if publisher or post ID don't match, they are
+                // * different posts and hence should be treated as such
                 Ordering::Equal => match other.post_id.cmp(&self.post_id) {
                     Ordering::Greater => Ordering::Greater,
                     Ordering::Less => Ordering::Less,
